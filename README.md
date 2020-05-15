@@ -52,7 +52,7 @@
 			Return IntPtr.Zero
 		End If
 		Dim lpReflectiveLoader As IntPtr = IntPtr.Add(lpRemoteLibraryBuffer, dwReflectiveLoaderOffset)
-		hThread = CreateRemoteThread(hProcess, Nothing, 1024 * 1024, lpReflectiveLoader, lpParameter, 0, dwThreadId)
+		hThread = CreateRemoteThread(hProcess, Nothing, 1024 * 1024, lpReflectiveLoader, Nothing, 0, dwThreadId)
 		Marshal.FreeHGlobal(baseAddress)
 		Return hThread
 	End Function
