@@ -1,9 +1,9 @@
-﻿Imports System
+Imports System
 Imports System.Runtime.InteropServices
 Imports System.IO
 Imports System.Diagnostics
 Module LoadRemoteLibrary
-	
+
 	Private Function GetReflectiveLoaderOffset(ByVal baseAddress As IntPtr) As UInteger
 		Dim dos_header As IMAGE_DOS_HEADER = Marshal.PtrToStructure(baseAddress, GetType(IMAGE_DOS_HEADER))
 		Dim nt_header_ptr As IntPtr = IntPtr.Add(baseAddress, dos_header.e_lfanew)
@@ -58,7 +58,9 @@ Module LoadRemoteLibrary
 		Return hThread
 	End Function
 
-
+	Public Const MEM_COMMIT As Long = &H1000
+	Public Const MEM_RESERVE As Long = &H2000
+	Public Const PAGE_EXECUTE_READWRITE As Long = &H40
 	<StructLayout(LayoutKind.Sequential)>
 	Public Structure IMAGE_DOS_HEADER
 		Public e_magic As UInt16
@@ -204,5 +206,17 @@ Module LoadRemoteLibrary
 	End Structure
 	<DllImport("dbghelp", SetLastError:=True)>
 	Public Function ImageRvaToVa(ByVal NtHeaders As IntPtr, ByVal Base As IntPtr, ByVal Rva As UInteger, ByVal LastRvaSection As Integer) As IntPtr
+	End Function
+	<DllImport("kernel32.dll", SetLastError:=True)>
+	Public Function WriteProcessMemory(ByVal hProcess As IntPtr, ByVal lpBaseAddress As IntPtr, ByVal lpBuffer As IntPtr, ByVal nSize As Int32, ByRef lpNumberOfBytesWritten As IntPtr) As Boolean
+	End Function
+	<DllImport("kernel32.dll", SetLastError:=True)>
+	Public Function WriteProcessMemory(ByVal hProcess As IntPtr, ByVal lpBaseAddress As IntPtr, ByVal lpBuffer() As Byte, ByVal nSize As Integer, ByRef lpNumberOfBytesWritten As IntPtr) As Boolean
+	End Function
+	<DllImport("kernel32.dll")>
+	Public Function CreateRemoteThread(ByVal hProcess As IntPtr, ByVal lpThreadAttributes As IntPtr, ByVal dwStackSize As UInteger, ByVal lpStartAddress As IntPtr, ByVal lpParameter As IntPtr, ByVal dwCreationFlags As UInteger, ByVal lpThreadId As IntPtr) As IntPtr
+	End Function
+	<DllImport("kernel32.dll", SetLastError:=True, ExactSpelling:=True)>
+	Public Function VirtualAllocEx(ByVal hProcess As IntPtr, ByVal lpAddress As IntPtr, ByVal dwSize As IntPtr, ByVal flAllocationType As UInteger, ByVal flProtect As UInteger) As IntPtr
 	End Function
 End Module
