@@ -33,7 +33,7 @@
 		Return 0
 	End Function
   
-  Public Function LoadRemoteLibraryR(hProcess As IntPtr, lpBuffer() As Byte, dwLength As UInteger, lpParameter As IntPtr) As IntPtr
+  Public Function LoadRemoteLibraryR(hProcess As IntPtr, lpBuffer() As Byte, dwLength As UInteger) As IntPtr
 		Dim dwThreadId As UInteger
 		Dim hThread As IntPtr = Nothing
 		Dim baseAddress As IntPtr = Marshal.AllocHGlobal(lpBuffer.Length)
@@ -96,7 +96,7 @@ Private Function ReflectiveDLLInjection( DllPath As String, ExePath As String) A
 
         Dim hHandle = OpenProcess(PROCESS_ALL_ACCESS Or PROCESS_VM_OPERATION Or PROCESS_VM_READ Or PROCESS_VM_WRITE, False, pi.dwProcessId)
 
-        Dim Handle = LoadRemoteLibraryR(hHandle, lpBuffer, dwLength, Nothing)
+        Dim Handle = LoadRemoteLibraryR(hHandle, lpBuffer, dwLength)
 
         'Dim result = TerminateProcess(pi.hProcess, 0)
         Marshal.FreeHGlobal(pSecAttr)
