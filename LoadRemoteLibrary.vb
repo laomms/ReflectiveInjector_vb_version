@@ -3,24 +3,7 @@ Imports System.Runtime.InteropServices
 Imports System.IO
 Imports System.Diagnostics
 Module LoadRemoteLibrary
-	Private Function Rva2Offset(ByVal dwRva As UInteger, ByVal uiBaseAddress As IntPtr) As UInteger
-		Dim dos_header As IMAGE_DOS_HEADER = Marshal.PtrToStructure(uiBaseAddress, GetType(IMAGE_DOS_HEADER))
-		Dim pNtHeaders As IMAGE_NT_HEADERS32 = Marshal.PtrToStructure(IntPtr.Add(uiBaseAddress, dos_header.e_lfanew), GetType(IMAGE_NT_HEADERS32))
-
-		Dim pSectionHeader As IMAGE_SECTION_HEADER
-		Dim sizeOfSectionHeader = Marshal.SizeOf(pSectionHeader)
-		Dim imageSectionPtr = IntPtr.Add(IntPtr.Add(uiBaseAddress, dos_header.e_lfanew), Marshal.OffsetOf(GetType(IMAGE_NT_HEADERS32), "OptionalHeader") + pNtHeaders.FileHeader.SizeOfOptionalHeader)
-		pSectionHeader = Marshal.PtrToStructure(imageSectionPtr, GetType(IMAGE_SECTION_HEADER))
-		If dwRva < pSectionHeader.PointerToRawData Then
-			Return dwRva
-		End If
-		For wIndex As UShort = 0 To pNtHeaders.FileHeader.NumberOfSections - 1
-			If dwRva >= pSectionHeader.VirtualAddress AndAlso dwRva < (pSectionHeader.VirtualAddress + pSectionHeader.SizeOfRawData) Then
-				Return dwRva - pSectionHeader.VirtualAddress + pSectionHeader.PointerToRawData
-			End If
-		Next wIndex
-		Return 0
-	End Function
+	
 	Private Function GetReflectiveLoaderOffset(ByVal baseAddress As IntPtr) As UInteger
 		Dim dos_header As IMAGE_DOS_HEADER = Marshal.PtrToStructure(baseAddress, GetType(IMAGE_DOS_HEADER))
 		Dim nt_header_ptr As IntPtr = IntPtr.Add(baseAddress, dos_header.e_lfanew)
