@@ -60,7 +60,7 @@
 to use:
 
 ```vb.net
-Private Function ReflectiveDLLInjection( DllPath As String, ExePath As String) As AgrListStruct
+Private Function ReflectiveDLLInjection( DllPath As String, ExePath As String) As IntPtr
         Dim SecAttr As New SECURITY_ATTRIBUTES
         Dim SecDesc As New SECURITY_DESCRIPTOR
         Dim pSecAttr As IntPtr = Marshal.AllocHGlobal(Marshal.SizeOf(SecAttr))
